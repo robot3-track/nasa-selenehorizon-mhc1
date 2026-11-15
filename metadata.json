@@ -1,0 +1,8 @@
+{
+  "name": "Selene Horizon",
+  "description": "Lunar south pole solar illumination, horizon obstruction, and direct-to-Earth communication mission planner.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
