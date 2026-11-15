@@ -144,7 +144,7 @@ function parseFloat32GeoTiff(buf: Buffer): { width: number; height: number; floa
 /**
  * 1. NASA JPL Horizons API Proxy (Sun & Earth topocentric ephemeris on the Moon)
  */
-app.get('/api/horizons', async (req, res) => {
+app.get(['/api/horizons', '/horizons'], async (req, res) => {
   try {
     const lat = Number(req.query.lat);
     const lon = Number(req.query.lon);
@@ -222,7 +222,7 @@ app.get('/api/horizons', async (req, res) => {
 /**
  * 2. NASA Moon Trek Artemis III Candidate Landing Regions GeoJSON + LOLA Ridge Crest Snapping
  */
-app.get('/api/nasa/artemis-regions', async (_req, res) => {
+app.get(['/api/nasa/artemis-regions', '/nasa/artemis-regions'], async (_req, res) => {
   try {
     if (artemisRegionsCache && Date.now() - artemisRegionsCache.ts < 60 * 60 * 1000) {
       res.json(artemisRegionsCache.data);
@@ -326,7 +326,7 @@ app.get('/api/nasa/artemis-regions', async (_req, res) => {
 /**
  * 3. NASA Moon Trek Multi-Resolution LRO LOLA DEM Grid (Regional 2.1km, Local 280m, Crest 27m via SPole875 5m/px)
  */
-app.get('/api/nasa/lola-dem', async (req, res) => {
+app.get(['/api/nasa/lola-dem', '/nasa/lola-dem'], async (req, res) => {
   try {
     const mode =
       req.query.mode === 'crest' ? 'crest' : req.query.mode === 'local' ? 'local' : 'regional';
@@ -399,7 +399,9 @@ app.get('/api/nasa/lola-dem', async (req, res) => {
 /**
  * 4. NASA Moon Trek WMTS Tile Proxy
  */
-app.get('/api/nasa/tile/:layer/:z/:row/:col', async (req, res) => {
+app.get(
+  ['/api/nasa/tile/:layer/:z/:row/:col', '/nasa/tile/:layer/:z/:row/:col'],
+  async (req, res) => {
   try {
     const { layer, z, row, col } = req.params;
     if (!ALLOWED_WMTS_LAYERS.has(layer)) {
@@ -459,4 +461,10 @@ async function startServer() {
   });
 }
 
-startServer();
+// Export express app for Vercel serverless integration, tests, and modular imports
+export { app };
+export default app;
+
+if (!process.env.VERCEL) {
+  startServer();
+}

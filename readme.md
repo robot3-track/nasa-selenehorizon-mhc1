@@ -57,9 +57,36 @@ Selene Horizon relies on validated NASA open-source data and standard aerospace 
 
 4. Launch the application:
    ```bash
-   # Replace with your project's start command
-   npm start
+   npm run dev
    ```
+
+## Deploying to Vercel via GitHub
+
+The codebase is pre-configured with `vercel.json` and `/api/index.ts` so both the Vite client-side SPA and the NASA backend proxy routes work seamlessly on Vercel without separate servers or CORS errors.
+
+1. **Push your code to GitHub:**
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit of Selene Horizon"
+   git branch -M main
+   git remote add origin https://github.com/<your-username>/selene-horizon.git
+   git push -u origin main
+   ```
+
+2. **Import into Vercel:**
+   * Go to [Vercel Dashboard](https://vercel.com/dashboard) and click **"Add New..."** > **"Project"**.
+   * Select your GitHub repository and click **"Import"**.
+
+3. **Verify Project Settings (handled automatically by `vercel.json`):**
+   * **Framework Preset:** `Vite`
+   * **Build Command:** `npm run build`
+   * **Output Directory:** `dist`
+   * **Root Directory:** `./`
+
+4. **Deploy:**
+   * Click **"Deploy"**.
+   * Vercel builds the static bundle to edge storage and mounts `/api/*` (JPL Horizons ephemeris proxy, LOLA DEM parser, Moon Trek tile cache, and Artemis region outlines) as a serverless function. No environment variables are required.
 
 ## Usage
 
